@@ -1,39 +1,35 @@
-// https://developer.spotify.com/documentation/web-playback-sdk/quick-start/#
-export const authEndpoint = "https://accounts.spotify.com/authorize";
+// Backend API base URL
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://127.0.0.1:5002/';
 
-// Replace with your app's client ID, redirect URI and desired scopes
-// use cliend id from env
-
-const clientId = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
-// use vercel for deployment
-// make the redirectUri the deployed url
-
-const redirectUri = "https://playlist-ai-zeta.vercel.app/";
-// const redirectUri = "http://localhost:3000/";
-
-const scopes = [
-  "user-read-currently-playing",
-  "user-read-recently-played",
-  "user-read-playback-state",
-  "user-top-read",
-  "user-modify-playback-state",
-  "user-library-modify",
-  "playlist-modify-public",
-  "playlist-modify-private",
-];
-
-export const getTokenFromResponse = () => {
-  return window.location.hash
-    .substring(1)
-    .split("&")
-    .reduce((initial, item) => {
-      var parts = item.split("=");
-      initial[parts[0]] = decodeURIComponent(parts[1]);
-
-      return initial;
-    }, {});
+// Get Spotify login URL from backend
+export const getSpotifyLoginUrl = async () => {
+  try {
+    const response = await fetch(`${BACKEND_URL}/auth/login`);
+    const data = await response.json();
+    return data.authUrl;
+  } catch (error) {
+    console.error('Error getting Spotify login URL:', error);
+    throw error;
+  }
 };
 
+// Get token from URL parameters (after OAuth callback)
+export const getTokenFromResponse = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const access_token = urlParams.get('access_token');
+  const refresh_token = urlParams.get('refresh_token');
+  const expires_in = urlParams.get('expires_in');
+
+  if (access_token) {
+    // Clear URL parameters
+    window.history.replaceState({}, document.title, window.location.pathname);
+    return { access_token, refresh_token, expires_in };
+  }
+
+  return {};
+};
+
+// Create playlist using Spotify API
 export const createPlaylist = async (
   token,
   playlistName,
@@ -47,8 +43,6 @@ export const createPlaylist = async (
   });
   const userData = await userResponse.json();
   const userId = userData.id;
-
-  // console.log("user_fetched\n", userData);
 
   const playlistResponse = await fetch(
     `https://api.spotify.com/v1/users/${userId}/playlists`,
@@ -68,8 +62,6 @@ export const createPlaylist = async (
   const playlistData = await playlistResponse.json();
   const playlistId = playlistData.id;
 
-  // console.log("playlist_fetched\n", playlistData);
-
   await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
     method: "POST",
     headers: {
@@ -83,7 +75,3 @@ export const createPlaylist = async (
 
   return playlistData;
 };
-
-export const accessUrl = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
-  "%20"
-)}&response_type=token&show_dialog=true`;

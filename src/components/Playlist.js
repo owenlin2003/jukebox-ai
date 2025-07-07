@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import {
   Modal,
   Button,
   CircularProgress,
-  Fade,
-  Backdrop,
   Paper,
   Typography,
   Box,
-  Input,
 } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { createPlaylist } from "../auth.js";
@@ -23,17 +20,12 @@ function Playlist({ token, songs }) {
   const [trackIds, setTrackIds] = useState([]);
   const [playlistCreated, setPlaylistCreated] = useState(false);
   const [tracks, setTracks] = useState([]);
-  const [tracksLoaded, setTracksLoaded] = useState(false);
 
   const handleOpen = () => {
     setPlaylistCreated(true);
     setOpen(true);
     fetchSongs();
   };
-
-  useEffect(() => {
-    if (tracks.length > 0) setTracksLoaded(true);
-  }, [tracks]);
 
   const handleClose = () => {
     setOpen(false);

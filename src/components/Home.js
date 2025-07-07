@@ -1,12 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "../styles/Home.css";
-import { Configuration, OpenAIApi } from "openai";
+// Remove OpenAI import since we're using backend
+// import OpenAI from "openai";  // ✅ new v4 way
+
 import Playlist from "./Playlist";
 import { Box, Button, Typography } from "@mui/material";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import TextField from "@mui/material/TextField";
 import LoadingButton from "@mui/lab/LoadingButton";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
+
+// Backend API base URL
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5002';
 
 function Home({ token }) {
   const [inputValue, setInputValue] = useState("");
@@ -35,56 +40,42 @@ function Home({ token }) {
   };
 
   const fetchSongs = async () => {
-    const prompt = `Pretend you have great taste in music.
-    Your task is to generate 10 similar songs based on the below songs.
-    Output format: <song number>. "<song title>" by <artist> (<release year>).\n
-    ${inputValue}`;
-
-    // console.log("prompt\n", prompt);
-
-    const configuration = new Configuration({
-      apiKey: `${process.env.REACT_APP_CHATGPT_API_KEY}`,
-    });
-
-    const openai = new OpenAIApi(configuration);
-    const completion = await openai
-      .createChatCompletion({
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: `${prompt}` }],
-      })
-      .then((response) => {
-        // console.log("response\n", response);
-        // console.log("answer\n", response.data.choices[0].message.content);
-        const answer = response.data.choices[0].message.content;
-        const songs = answer.split("\n");
-
-        const parsedSongs = songs
-          .map((song, index) => {
-            const regex = /^(\d+)\.\s"(.+)"\sby\s(.+)\s\((\d+)\)$/;
-            const matches = song.match(regex);
-
-            if (matches) {
-              const [, songNumber, title, artist, releaseDate] = matches;
-              return { id: index, title, artist, releaseDate };
-            }
-
-            return null;
-          })
-          .filter(Boolean);
-
-        if (parsedSongs.length) {
-          setGeneratedSongs(parsedSongs);
-          setInputValue(
-            inputValue +
-              "\n\nHere are some similar songs:\n\n" +
-              getSongString(parsedSongs)
-          );
-        } else {
-          setInputValue("No songs found");
-        }
+    try {
+      const response = await fetch(`${BACKEND_URL}/gpt/recommend`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userInput: inputValue,
+        }),
       });
-    setClicked(true);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const parsedSongs = data.songs;
+
+      if (parsedSongs && parsedSongs.length) {
+        setGeneratedSongs(parsedSongs);
+        setInputValue(
+          inputValue +
+            "\n\nHere are some similar songs:\n\n" +
+            getSongString(parsedSongs)
+        );
+      } else {
+        setInputValue("No songs found");
+      }
+    } catch (error) {
+      console.error('Error fetching recommendations:', error);
+      setInputValue("Error generating recommendations. Please try again.");
+    } finally {
+      setClicked(false);
+    }
   };
+  
 
   return (
     <div className="Home">
@@ -108,7 +99,7 @@ function Home({ token }) {
             fontWeight: "bold",
           }}
         >
-          Playlist.AI by Shammi
+          Jukebox AI by Owen Lin
         </Typography>
       </Box>
       <Box
@@ -141,8 +132,6 @@ function Home({ token }) {
             onChange={handleInputChange}
             placeholder="let us know some of your favorite songs and we'll generate some similar ones for you!"
             sx={{
-              // width for mobile, tablet, desktop
-              width: "[90%, 70%, 50%]",
               width: "75%",
               color: "white",
               // backgroundColor: "white",
@@ -193,7 +182,12 @@ function Home({ token }) {
               // mt: "2rem",
             }}
             onClick={() => {
-              window.location.reload();
+              // Clear stored tokens
+              localStorage.removeItem('spotify_access_token');
+              localStorage.removeItem('spotify_refresh_token');
+              localStorage.removeItem('spotify_expires_in');
+              // Redirect to login page
+              window.location.href = '/';
             }}
           >
             <ExitToAppIcon />

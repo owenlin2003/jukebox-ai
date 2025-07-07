@@ -1,33 +1,172 @@
-# Playlist.AI
+# Jukebox AI 🎵
 
-Playlist.AI is a React JS web application hosted on Vercel that allows users to search for similar songs using OpenAI's GPT-3.5 language model, and then fetches those songs from Spotify API, allowing users to create playlists using the fetched songs.
+A modern, AI-powered music recommendation app built from scratch by **Owen Lin**. This full-stack application combines Spotify's vast music library with OpenAI's GPT technology to create personalized music recommendations based on your mood and favorite songs.
 
-## Getting Started
+## ✨ Features
 
-To use Playlist.AI, you need to be invited to the app. To receive an invite, please send an email to the project owner. Once you have received your invite, follow these steps to use the deployed link:
+- **🎯 Mood-Based Recommendations**: AI analyzes your music taste and suggests songs that match your current mood
+- **🔐 Secure Spotify Integration**: OAuth authentication with Spotify for seamless access to your music library
+- **🤖 GPT-Powered AI**: Advanced AI algorithms that understand music patterns and preferences
+- **🎨 Modern UI/UX**: Sleek, dynamic interface designed with modern web technologies
+- **📱 Responsive Design**: Works perfectly on desktop, tablet, and mobile devices
+- **⚡ Real-time Processing**: Instant music recommendations with live AI processing
 
-1. Login to Spotify using the invite email (if you already have a Spotify account) or signup to Spotify using the invite email and confirm your account through the email link.
+## 🏗️ Technical Architecture
 
-2. You can now use the web app fully and start creating your playlist by searching for similar songs using the OpenAI model.
+- **Frontend**: React.js with Material-UI components
+- **Backend**: Node.js with Express.js server
+- **AI Integration**: OpenAI GPT-3.5 Turbo API
+- **Music API**: Spotify Web API
+- **Styling**: Modern CSS with animations and glass morphism effects
 
-## Usage
+## 🚀 Quick Start
 
-Once you have logged in to the web app, you can start searching for similar songs using the OpenAI model. The app will fetch the recommended songs from Spotify and allow you to create a playlist with those songs.
+### Prerequisites
+- Node.js (v16 or higher)
+- Spotify Developer Account
+- OpenAI API Key
 
-## Technologies Used
+### 1. Clone the Repository
+```bash
+git clone https://github.com/yourusername/jukeboxai.git
+cd jukeboxai
+```
 
-Playlist.AI is built using the following technologies:
+### 2. Backend Setup
+```bash
+cd server
+npm install
+```
 
-- React JS: A popular JavaScript library used for building user interfaces.
-- OpenAI's GPT-3.5 Architecture: A natural language processing model used to generate similar songs.
-- Spotify Web API: An API that allows developers to access Spotify's features and data.
+Create a `.env` file in the server directory:
+```env
+SPOTIFY_CLIENT_ID=your_spotify_client_id
+SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+SPOTIFY_REDIRECT_URI=http://127.0.0.1:5002/auth/callback
+OPENAI_API_KEY=your_openai_api_key
+PORT=5002
+FRONTEND_URL=http://127.0.0.1:3000
+NODE_ENV=development
+```
 
-## Deployed App Screenshots
+Start the backend:
+```bash
+node server.js
+```
 
-![home screen 1 in mobile view](https://user-images.githubusercontent.com/54147419/234326345-81819d2d-f302-4340-b56b-924686b915a6.png)
-![home screen 2 in mobile view](https://user-images.githubusercontent.com/54147419/234326359-0df8be0a-fa72-4a12-8018-0cba2ce46286.png)
-![home screen 3 in mobile view](https://user-images.githubusercontent.com/54147419/234326367-23348259-60e2-4b8c-affe-e438ed7991cb.png)
-![home screen 2 in web view](https://user-images.githubusercontent.com/54147419/234326354-ec1138a7-ac50-4aca-83ed-dc4aee443bb8.png)
-![create playlist in web view](https://user-images.githubusercontent.com/54147419/234326314-ff54f13f-8fcd-45e6-a2d3-dbd8954cf595.png)
-![home screen 1 in web view](https://user-images.githubusercontent.com/54147419/234326370-a728a34c-a7d3-496f-80cf-60cdc3c43469.png)
-![login screen web](https://user-images.githubusercontent.com/54147419/234326375-ca03dbc4-16b0-48dc-8349-dae654b45303.png)
+### 3. Frontend Setup
+```bash
+# In a new terminal, from the root directory
+npm install
+```
+
+Create a `.env` file in the root directory:
+```env
+REACT_APP_BACKEND_URL=http://localhost:5002
+```
+
+Start the frontend:
+```bash
+npm start
+```
+
+### 4. Spotify App Configuration
+1. Go to [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
+2. Create a new app
+3. Add `http://127.0.0.1:5002/auth/callback` to Redirect URIs
+4. Copy Client ID and Client Secret to your backend `.env` file
+
+## 🎯 How It Works
+
+1. **User Authentication**: Secure OAuth flow with Spotify
+2. **Music Analysis**: AI analyzes your favorite songs and listening patterns
+3. **Mood Detection**: GPT understands the emotional context of your music
+4. **Recommendation Generation**: Creates personalized song suggestions
+5. **Playlist Creation**: Option to create Spotify playlists with recommendations
+
+## 📁 Project Structure
+
+```
+jukeboxai/
+├── src/                    # Frontend React application
+│   ├── components/         # React components (Login, Home, Playlist)
+│   ├── auth.js            # Authentication and API utilities
+│   └── styles/            # CSS styling files
+├── server/                # Backend Node.js server
+│   ├── server.js          # Express server with API endpoints
+│   ├── package.json       # Backend dependencies
+│   └── .env              # Backend environment configuration
+├── .env                   # Frontend environment variables
+├── package.json           # Frontend dependencies
+└── README.md             # Project documentation
+```
+
+## 🔌 API Endpoints
+
+### Authentication
+- `GET /auth/login` - Generate Spotify OAuth URL
+- `GET /auth/callback` - Handle OAuth callback and token exchange
+
+### AI Recommendations
+- `POST /gpt/recommend` - Generate music recommendations using GPT
+- `GET /health` - Server health check
+
+## 🎨 Design Philosophy
+
+This project was designed with a focus on:
+- **User Experience**: Intuitive, engaging interface
+- **Performance**: Fast, responsive interactions
+- **Security**: Secure handling of API keys and user data
+- **Scalability**: Clean architecture for future enhancements
+
+## 🛠️ Development
+
+### Backend Development
+```bash
+cd server
+npm run dev  # Uses nodemon for auto-restart
+```
+
+### Frontend Development
+```bash
+npm start  # Runs on http://localhost:3000
+```
+
+### Environment Variables
+Make sure to set up all required environment variables in both frontend and backend `.env` files.
+
+## 🚀 Deployment
+
+### Backend Deployment
+- Deploy to platforms like Heroku, Railway, or DigitalOcean
+- Update environment variables for production
+- Ensure CORS is properly configured
+
+### Frontend Deployment
+- Deploy to Vercel, Netlify, or similar platforms
+- Update backend URL in environment variables
+- Configure build settings for React app
+
+### Spotify App Updates
+- Update redirect URIs in Spotify Developer Dashboard
+- Ensure production URLs are properly configured
+
+## 🤝 Contributing
+
+This is a personal project created by Owen Lin. Feel free to fork and modify for your own use!
+
+## 📝 License
+
+This project is created and maintained by Owen Lin. Feel free to use this code for learning and personal projects.
+
+## 🙏 Acknowledgments
+
+- Spotify for their comprehensive music API
+- OpenAI for their powerful GPT technology
+- The React and Node.js communities for excellent documentation and tools
+
+---
+
+**Created with ❤️ by Owen Lin**
+
+*Building the future of music discovery, one recommendation at a time.*
