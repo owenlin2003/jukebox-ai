@@ -2,14 +2,14 @@
 
 A modern, AI-powered music recommendation app built from scratch by **Owen Lin**. This full-stack application combines Spotify's vast music library with OpenAI's GPT technology to create personalized music recommendations based on your mood and favorite songs.
 
-## ✨ Features
+## ✨ What This Does
 
-- **🎯 Mood-Based Recommendations**: AI analyzes your music taste and suggests songs that match your current mood
-- **🔐 Secure Spotify Integration**: OAuth authentication with Spotify for seamless access to your music library
-- **🤖 GPT-Powered AI**: Advanced AI algorithms that understand music patterns and preferences
-- **🎨 Modern UI/UX**: Sleek, dynamic interface designed with modern web technologies
-- **📱 Responsive Design**: Works perfectly on desktop, tablet, and mobile devices
-- **⚡ Real-time Processing**: Instant music recommendations with live AI processing
+- **🎯 Finds Your Vibe**: Tell me what you're feeling or what songs you love, and I'll find similar stuff that matches your mood
+- **🔐 Works with Your Spotify**: Just log in with your Spotify account and I can see what you're into
+- **🤖 Smart Recommendations**: Uses AI to understand what makes your favorite songs tick and suggests similar ones
+- **🎨 Looks Good**: Clean, modern interface that doesn't get in the way of finding great music
+- **📱 Works Everywhere**: Whether you're on your phone, tablet, or computer, it just works
+- **⚡ Fast**: Get recommendations instantly - no waiting around
 
 ## 🏗️ Technical Architecture
 
